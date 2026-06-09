@@ -1,0 +1,48 @@
+{
+  "title": "HC/PHAC Architecture Alignment Assessment",
+  "version": "1.0",
+  "date": "June 2026",
+  "audience": "CIOs, EA Directors, Data Platform Directors (HC and PHAC)",
+  "completionTime": "Track 1 ~4 min, Track 2 ~12 min (optional)",
+  "privacy": "Results will be reported only in aggregate. Individual responses will not be attributed.",
+  "decisionUse": "This assessment does not make the decision. It identifies where alignment exists, where executive decision is required, and which unresolved issues should be brought to ARB.",
+  "track2Label": "Architecture Detail — recommended for EA/Data Platform respondents; optional for CIOs.",
+  "minimumResponseThreshold": 15,
+  "minimumSegmentThreshold": 3,
+  "baseline": [
+    "PATH (Protected AI Technology Hub)",
+    "HAIL (Health AI Lab)",
+    "Purview (Data governance and lineage)",
+    "Databricks / Fabric (Data platform)",
+    "HC/PHAC AI Governance framework",
+    "Enterprise Data Strategy"
+  ],
+  "track1": [
+    "Q1: Operating Model Architecture",
+    "Q2: Platform Operating Model",
+    "Q3: Governance Enforcement Timing",
+    "Q4: Data Governance Sequencing",
+    "Q5A: Policy Authority",
+    "Q5B: Architecture Authority"
+  ],
+  "track2": [
+    "Q6: PATH Role Definition",
+    "Q7: HAIL Role Definition",
+    "Q7A: PATH / HAIL Relationship",
+    "Q8: Data Governance (Purview)",
+    "Q9: Data Platform Technology",
+    "Q10: Governance Operations Ownership",
+    "Q11: Operational Funding Model",
+    "Q12: Day-to-Day Operations & Staffing",
+    "Q13: Top Risks & Blockers"
+  ],
+  "optional": ["Open Comments"],
+  "branching": {
+    "q6_path_role": "References q3_governance_timing; variants emphasize pre-flight, continuous runtime, both, or use-case-dependent governance.",
+    "q7_hail_role": "References q1_operating_model; variants frame HAIL as project runtime, shared runtime, or hybrid ownership.",
+    "q7a_path_hail_relationship": "Independent; no conditional branching required.",
+    "q10_gov_ops": "References q2_platform_model; variants frame joint operations, clear separation, federated, independent, or undecided ownership.",
+    "q12_operations_staffing": "References q2_platform_model; variants frame joint, hybrid/both-organizations, federated, independent, or undecided staffing."
+  },
+  "runtimeSourceOfTruth": "server/src/questions.ts contains the full option labels, text follow-ups, and branch-context strings used by the app."
+}

@@ -1,0 +1,43 @@
+{
+  "name": "hc-phac-architecture-alignment-assessment",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "tsx watch server/src/index.ts",
+    "dev:client": "vite --host 0.0.0.0 --port 5173 client",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build client",
+    "build:server": "tsc -p tsconfig.server.json",
+    "start": "node dist/server/index.js",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.server.json --noEmit && tsc -p client/tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "better-sqlite3": "latest",
+    "cors": "latest",
+    "express": "latest",
+    "helmet": "latest",
+    "zod": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@types/express": "latest",
+    "@types/node": "latest",
+    "@types/supertest": "latest",
+    "autoprefixer": "latest",
+    "concurrently": "latest",
+    "postcss": "latest",
+    "supertest": "latest",
+    "tailwindcss": "^3.4.17",
+    "tsx": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "vitest": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest"
+  }
+}
