@@ -1,0 +1,17 @@
+services:
+  hc-phac-assessment:
+    build: .
+    container_name: hc-phac-assessment
+    restart: unless-stopped
+    ports:
+      - "${ASSESSMENT_PORT:-8090}:8090"
+    environment:
+      - PORT=8090
+      - DB_PATH=/app/data/assessment.sqlite
+      - MIN_PUBLIC_RESPONSES=${MIN_PUBLIC_RESPONSES:-5}
+      - MIN_SEGMENT_RESPONSES=${MIN_SEGMENT_RESPONSES:-3}
+    volumes:
+      - hc_phac_assessment_data:/app/data
+
+volumes:
+  hc_phac_assessment_data:
