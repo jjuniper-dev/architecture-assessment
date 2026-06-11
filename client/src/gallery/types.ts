@@ -26,6 +26,8 @@ export interface GalleryDiagram {
   height: number;
   nodes: DiagramNode[];
   edges: DiagramEdge[];
+  /** Path to a real diagram image (e.g. exported from PowerPoint/Lucidchart). When set, this is rendered instead of the generated node/edge SVG. */
+  image?: string;
 }
 
 export interface TitleSuggestion {

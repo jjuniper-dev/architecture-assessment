@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { diagramSvgMarkup } from './diagramSvg';
+import { diagramPreviewMarkup } from './diagramSvg';
 import type { GalleryDiagram, RedrawResult, TitleSuggestion } from './types';
 
 export default function DiagramDetailModal({ diagram, onClose }: { diagram: GalleryDiagram; onClose: () => void }) {
@@ -58,7 +58,7 @@ export default function DiagramDetailModal({ diagram, onClose }: { diagram: Gall
 
         <div
           className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3"
-          dangerouslySetInnerHTML={{ __html: diagramSvgMarkup(diagram, { width: 640, height: 360 }) }}
+          dangerouslySetInnerHTML={{ __html: diagramPreviewMarkup(diagram, { width: 640, height: 360 }) }}
         />
 
         <p className="mt-4 text-sm text-slate-700">{diagram.description}</p>

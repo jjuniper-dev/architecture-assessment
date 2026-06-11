@@ -64,3 +64,11 @@ export function diagramSvgMarkup(diagram: GalleryDiagram, size: { width: number;
     <g>${nodesSvg}</g>
   </svg>`;
 }
+
+/** Renders a diagram preview as markup: a real image if the diagram has one, otherwise a generated SVG. */
+export function diagramPreviewMarkup(diagram: GalleryDiagram, size: { width: number; height: number }): string {
+  if (diagram.image) {
+    return `<img src="${diagram.image}" alt="${escapeXml(diagram.title)}" width="${size.width}" height="${size.height}" class="diagram-image" loading="lazy" />`;
+  }
+  return diagramSvgMarkup(diagram, size);
+}

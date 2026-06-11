@@ -26,6 +26,8 @@ export interface GalleryDiagram {
   height: number;
   nodes: DiagramNode[];
   edges: DiagramEdge[];
+  /** Path to a real diagram image (e.g. exported from PowerPoint/Lucidchart). When set, this is rendered instead of the generated node/edge SVG. */
+  image?: string;
 }
 
 export const galleryDiagrams: GalleryDiagram[] = [
@@ -228,5 +230,70 @@ export const galleryDiagrams: GalleryDiagram[] = [
       { from: 'bus', to: 'readModel' },
       { from: 'queryApi', to: 'readModel' }
     ]
+  },
+  {
+    id: 'hail-path-governance-runtime',
+    filename: 'img_h1A2_HailPathGovernanceRuntimeModel_20250521_k9X3_EnterpriseAIPlatform.png',
+    title: 'Enterprise AI Platform — Governance & Runtime Operating Model',
+    category: 'AI Governance',
+    description: 'Control plane (identity, governance, orchestration, audit) governs a gatekeeper-pattern AI control plane in front of a runtime and data plane, all on a shared foundation. Starting point for separating AI policy enforcement from AI execution.',
+    tags: ['ai-governance', 'control-plane', 'gatekeeper-pattern', 'operating-model'],
+    width: 1536,
+    height: 1024,
+    nodes: [],
+    edges: [],
+    image: '/diagrams/img_h1A2_HailPathGovernanceRuntimeModel_20250521_k9X3_EnterpriseAIPlatform.png'
+  },
+  {
+    id: 'hail-path-azure-platform',
+    filename: 'img_p7M4_HailPathAzureAIDataPlatform_20250521_q2Z8_ControlRuntimePlanes.png',
+    title: 'HAIL + PATH: Azure AI & Data Platform Architecture',
+    category: 'AI Governance',
+    description: 'Maps a control plane (PATH) and runtime plane (HAIL) onto concrete Azure and Microsoft 365 services, with a gatekeeper AI control plane enforcing policy across the lifecycle. Starting point for an Azure-native governed AI platform.',
+    tags: ['ai-governance', 'azure', 'control-plane', 'runtime-plane'],
+    width: 1536,
+    height: 1024,
+    nodes: [],
+    edges: [],
+    image: '/diagrams/img_p7M4_HailPathAzureAIDataPlatform_20250521_q2Z8_ControlRuntimePlanes.png'
+  },
+  {
+    id: 'hail-path-unified-conceptual',
+    filename: 'img_t5N1_HailPathUnifiedAIDataPlatform_20250521_w3Y6_ConceptualArchitecture.png',
+    title: 'HAIL + PATH: Unified AI & Data Platform (Conceptual)',
+    category: 'AI Governance',
+    description: 'High-level conceptual view of a unified AI and data platform under a Protected B policy overlay, showing how the control plane and runtime plane align around a shared data platform. Starting point for an executive-level architecture overview.',
+    tags: ['ai-governance', 'conceptual', 'data-platform', 'protected-b'],
+    width: 1536,
+    height: 1024,
+    nodes: [],
+    edges: [],
+    image: '/diagrams/img_t5N1_HailPathUnifiedAIDataPlatform_20250521_w3Y6_ConceptualArchitecture.png'
+  },
+  {
+    id: 'hail-path-gatekeeper-pattern',
+    filename: 'img_b8C3_HailPathGatekeeperPattern_20250521_e4F7_OnePlatformTwoEngines.png',
+    title: 'HAIL + PATH: One Platform, Two Engines (Gatekeeper Pattern)',
+    category: 'AI Governance',
+    description: 'Two complementary engines - a runtime engine (HAIL) and a governance/control engine (PATH) - share a data platform and cross-cutting foundation, connected via a gatekeeper AI control plane. Starting point for shared-accountability platform models.',
+    tags: ['ai-governance', 'gatekeeper-pattern', 'shared-accountability', 'cross-cutting'],
+    width: 1536,
+    height: 1024,
+    nodes: [],
+    edges: [],
+    image: '/diagrams/img_b8C3_HailPathGatekeeperPattern_20250521_e4F7_OnePlatformTwoEngines.png'
+  },
+  {
+    id: 'hail-path-accountability-model',
+    filename: 'img_g2D9_HailPathAccountabilityModel_20250521_r6H1_OperatingModelOverview.png',
+    title: 'HAIL + PATH: Operating Model & Accountability',
+    category: 'AI Governance',
+    description: 'Pairs the HAIL + PATH platform view with an accountability matrix showing what the enterprise is accountable for and how each capability is enabled. Starting point for RACI-style operating model documentation.',
+    tags: ['ai-governance', 'operating-model', 'accountability', 'raci'],
+    width: 1536,
+    height: 1024,
+    nodes: [],
+    edges: [],
+    image: '/diagrams/img_g2D9_HailPathAccountabilityModel_20250521_r6H1_OperatingModelOverview.png'
   }
 ];
