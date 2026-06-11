@@ -152,7 +152,7 @@ export default function DesignGallery() {
       <h2 className="text-xl font-semibold">Architecture design starting points</h2>
       <p className="mt-2 text-sm text-slate-600">
         Drag to rotate the gallery and explore reusable architecture pattern sketches. Click a tile to view it full size, get
-        details, and (soon) ask the AI to refine it or suggest a title.
+        details, and ask the AI to refine it or suggest a title.
       </p>
       <div ref={containerRef} className="gallery-viewport mt-4">
         {!diagrams && <p className="p-6 text-sm text-slate-500">Loading gallery…</p>}

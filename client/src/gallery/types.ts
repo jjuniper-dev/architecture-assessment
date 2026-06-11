@@ -34,10 +34,10 @@ export interface TitleSuggestion {
   suggestedTitle: string;
   suggestedFilename: string;
   rationale: string;
-  source: 'content-heuristic';
+  source: 'content-heuristic' | 'openai';
 }
 
-export interface RedrawResult {
-  status: 'not_configured';
-  message: string;
-}
+export type RedrawResult =
+  | { status: 'not_configured'; message: string }
+  | { status: 'error'; message: string }
+  | { status: 'ok'; imageUrl: string; message: string };

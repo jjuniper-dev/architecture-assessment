@@ -119,7 +119,16 @@ export default function DiagramDetailModal({ diagram, onClose }: { diagram: Gall
             {redrawing ? 'Redrawing…' : 'Redraw with AI'}
           </button>
           {redrawResult && (
-            <div className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-950">{redrawResult.message}</div>
+            <div className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-950">
+              <p>{redrawResult.message}</p>
+              {redrawResult.status === 'ok' && (
+                <img
+                  src={redrawResult.imageUrl}
+                  alt="AI-redrawn diagram"
+                  className="diagram-image mt-3 rounded-lg border border-amber-200"
+                />
+              )}
+            </div>
           )}
         </div>
       </div>

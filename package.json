@@ -21,14 +21,18 @@
     "express": "latest",
     "gsap": "latest",
     "helmet": "latest",
-    "three": "latest",
-    "zod": "latest",
+    "openai": "^6.42.0",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "three": "latest",
+    "zod": "latest"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "latest",
     "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
     "@types/supertest": "latest",
     "@types/three": "latest",
     "autoprefixer": "latest",
@@ -39,8 +43,6 @@
     "tsx": "latest",
     "typescript": "latest",
     "vite": "latest",
-    "vitest": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest"
+    "vitest": "latest"
   }
 }
