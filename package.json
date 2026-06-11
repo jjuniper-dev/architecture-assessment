@@ -19,7 +19,9 @@
     "better-sqlite3": "latest",
     "cors": "latest",
     "express": "latest",
+    "gsap": "latest",
     "helmet": "latest",
+    "three": "latest",
     "zod": "latest",
     "react": "latest",
     "react-dom": "latest"
@@ -28,6 +30,7 @@
     "@types/express": "latest",
     "@types/node": "latest",
     "@types/supertest": "latest",
+    "@types/three": "latest",
     "autoprefixer": "latest",
     "concurrently": "latest",
     "postcss": "latest",

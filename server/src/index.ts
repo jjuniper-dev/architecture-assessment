@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import { z } from 'zod';
 import { aggregateResults, arbMarkdown, csvExport } from './analysis.js';
 import { openDb, setSurveyClosed } from './db.js';
+import { galleryDiagrams, redrawNotConfigured, suggestTitle } from './gallery.js';
 import { questionConfig, visibleQuestions } from './questions.js';
 
 const metadataSchema = z.object({
@@ -31,6 +32,24 @@ export function createApp(dbPath?: string) {
 
   app.get('/api/health', (_req, res) => res.json({ ok: true }));
   app.get('/api/questions', (_req, res) => res.json(questionConfig));
+
+  app.get('/api/gallery/diagrams', (_req, res) => res.json(galleryDiagrams));
+
+  app.post('/api/gallery/suggest-title', (req, res) => {
+    const parsed = z.object({ id: z.string() }).safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: 'Invalid request payload', details: parsed.error.flatten() });
+    const diagram = galleryDiagrams.find((d) => d.id === parsed.data.id);
+    if (!diagram) return res.status(404).json({ error: 'Diagram not found' });
+    res.json(suggestTitle(diagram));
+  });
+
+  app.post('/api/gallery/redraw', (req, res) => {
+    const parsed = z.object({ id: z.string(), instructions: z.string().min(1).max(2000) }).safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: 'Invalid request payload', details: parsed.error.flatten() });
+    const diagram = galleryDiagrams.find((d) => d.id === parsed.data.id);
+    if (!diagram) return res.status(404).json({ error: 'Diagram not found' });
+    res.json(redrawNotConfigured());
+  });
 
   app.post('/api/responses', (req, res) => {
     const parsed = submitSchema.safeParse(req.body);

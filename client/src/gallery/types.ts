@@ -1,0 +1,41 @@
+export interface DiagramNode {
+  id: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  label: string;
+  accent?: boolean;
+}
+
+export interface DiagramEdge {
+  from: string;
+  to: string;
+  label?: string;
+  dashed?: boolean;
+}
+
+export interface GalleryDiagram {
+  id: string;
+  filename: string;
+  title: string;
+  category: string;
+  description: string;
+  tags: string[];
+  width: number;
+  height: number;
+  nodes: DiagramNode[];
+  edges: DiagramEdge[];
+}
+
+export interface TitleSuggestion {
+  suggestedTitle: string;
+  suggestedFilename: string;
+  rationale: string;
+  source: 'content-heuristic';
+}
+
+export interface RedrawResult {
+  status: 'not_configured';
+  message: string;
+}
