@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import DesignGallery from './gallery/DesignGallery';
 import './styles.css';
 
 type BranchContext = { questionId: string; variants: Record<string, string>; defaultText: string };
@@ -10,6 +11,7 @@ const orgs = ['HC', 'PHAC', 'Shared/Joint', 'Other'];
 const roles = ['CIO', 'EA Director', 'Data Platform Director', 'Other'];
 
 function App() {
+  const [view, setView] = useState<'assessment' | 'gallery'>('assessment');
   const [config, setConfig] = useState<Config | null>(null);
   const [metadata, setMetadata] = useState({ org: 'HC', role: 'EA Director', includeTrack2: false });
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
@@ -18,7 +20,24 @@ function App() {
 
   useEffect(() => { fetch('/api/questions').then((r) => r.json()).then(setConfig); }, []);
   function refreshResults() { fetch('/api/results').then((r) => r.json()).then(setResults); }
-  if (!config) return <main className="p-8">Loading…</main>;
+
+  const nav = <nav className="mx-auto max-w-6xl px-6 pt-6">
+    <div className="inline-flex rounded-xl bg-white p-1 shadow-sm ring-1 ring-slate-200">
+      <button className={`rounded-lg px-4 py-2 text-sm font-semibold ${view === 'assessment' ? 'bg-blue-700 text-white' : 'text-slate-600 hover:bg-slate-100'}`} onClick={() => setView('assessment')}>Assessment</button>
+      <button className={`rounded-lg px-4 py-2 text-sm font-semibold ${view === 'gallery' ? 'bg-blue-700 text-white' : 'text-slate-600 hover:bg-slate-100'}`} onClick={() => setView('gallery')}>Design Gallery</button>
+    </div>
+  </nav>;
+
+  if (view === 'gallery') {
+    return <main className="min-h-screen bg-slate-50 text-slate-900">
+      {nav}
+      <section className="mx-auto max-w-6xl px-6 py-8">
+        <DesignGallery />
+      </section>
+    </main>;
+  }
+
+  if (!config) return <main className="min-h-screen bg-slate-50 text-slate-900">{nav}<p className="p-8">Loading…</p></main>;
   const questions = config.questions.filter((q) => q.track !== 'track2' || metadata.includeTrack2);
 
   async function submit(event: React.FormEvent) {
@@ -30,6 +49,7 @@ function App() {
   }
 
   return <main className="min-h-screen bg-slate-50 text-slate-900">
+    {nav}
     <section className="mx-auto max-w-6xl px-6 py-8">
       <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
         <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">Architecture evidence-gathering instrument · Version {config.version}</p>
