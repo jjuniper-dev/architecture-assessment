@@ -145,6 +145,16 @@ A mock ARB output sample is included at:
 
 - `samples/mock-arb-output.md`
 
+## Design Gallery AI features
+
+The Design Gallery's "Suggest a title" and "Redraw with AI" actions call OpenAI when configured:
+
+- `OPENAI_API_KEY` — required to enable both features. Without it, "Suggest a title" falls back to a content-based heuristic and "Redraw with AI" returns a "not configured" message.
+- `OPENAI_TITLE_MODEL` — optional, defaults to `gpt-4o-mini`. Used for title/filename suggestions.
+- `OPENAI_IMAGE_MODEL` — optional, defaults to `gpt-image-1`. Used for redrawing diagrams.
+
+Redrawn images are written to `data/generated/` and served from `/generated`.
+
 ## Tests
 
 ```bash
