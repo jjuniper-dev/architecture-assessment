@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import * as THREE from 'three';
 import { CSS3DObject, CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
-import { diagramSvgMarkup } from './diagramSvg';
+import { diagramPreviewMarkup } from './diagramSvg';
 import DiagramDetailModal from './DiagramDetailModal';
 import type { GalleryDiagram } from './types';
 
@@ -64,7 +64,7 @@ export default function DesignGallery() {
       el.className = 'gallery-card';
       el.innerHTML = `
         <div class="gallery-card-inner">
-          <div class="gallery-card-svg">${diagramSvgMarkup(diagram, { width: 280, height: 160 })}</div>
+          <div class="gallery-card-svg">${diagramPreviewMarkup(diagram, { width: 280, height: 160 })}</div>
           <div class="gallery-card-meta">
             <p class="gallery-card-category">${diagram.category}</p>
             <p class="gallery-card-title">${diagram.title}</p>

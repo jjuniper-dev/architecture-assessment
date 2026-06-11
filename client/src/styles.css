@@ -58,6 +58,11 @@
   width: 100%;
   height: auto;
 }
+.diagram-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 .diagram-node {
   fill: #eef2ff;
   stroke: #4338ca;
