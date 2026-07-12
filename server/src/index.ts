@@ -28,6 +28,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const clientDir = path.resolve(__dirname, '../client');
 const genDir = path.resolve(process.cwd(), 'data/generated');
 
+// Per-IP rate limit for the redraw endpoint (calls a paid OpenAI image model).
+// 5 requests per 10-minute window per source IP.
+const redrawBucket = new Map<string, { count: number; resetAt: number }>();
+const REDRAW_LIMIT = 5;
+const REDRAW_WINDOW_MS = 10 * 60 * 1000;
+
 function resolveDiagramImagePath(diagram: GalleryDiagram): string | null {
   if (!diagram.image) return null;
   const relative = diagram.image.replace(/^\//, '');
@@ -63,6 +69,17 @@ export function createApp(dbPath?: string) {
   });
 
   app.post('/api/gallery/redraw', async (req, res) => {
+    const ip = req.ip ?? 'unknown';
+    const now = Date.now();
+    const bucket = redrawBucket.get(ip);
+    if (bucket && now < bucket.resetAt) {
+      if (bucket.count >= REDRAW_LIMIT) {
+        return res.status(429).json({ status: 'error', message: `Redraw limit reached (${REDRAW_LIMIT} per 10 minutes). Please try again later.` });
+      }
+      bucket.count++;
+    } else {
+      redrawBucket.set(ip, { count: 1, resetAt: now + REDRAW_WINDOW_MS });
+    }
     const parsed = z.object({ id: z.string(), instructions: z.string().min(1).max(2000) }).safeParse(req.body);
     if (!parsed.success) return res.status(400).json({ error: 'Invalid request payload', details: parsed.error.flatten() });
     const diagram = galleryDiagrams.find((d) => d.id === parsed.data.id);
