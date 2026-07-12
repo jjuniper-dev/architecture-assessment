@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import cors from 'cors';
@@ -6,8 +7,10 @@ import express from 'express';
 import helmet from 'helmet';
 import { z } from 'zod';
 import { aggregateResults, arbMarkdown, csvExport } from './analysis.js';
+import { redrawWithAI, suggestTitleWithAI } from './ai.js';
 import { openDb, setSurveyClosed } from './db.js';
-import { galleryDiagrams, redrawNotConfigured, suggestTitle } from './gallery.js';
+import { galleryDiagrams, suggestTitle } from './gallery.js';
+import type { GalleryDiagram } from './galleryData.js';
 import { questionConfig, visibleQuestions } from './questions.js';
 
 const metadataSchema = z.object({
@@ -21,6 +24,26 @@ const submitSchema = z.object({
   answers: z.record(z.string(), z.union([z.string(), z.array(z.string())]))
 });
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const clientDir = path.resolve(__dirname, '../client');
+const genDir = path.resolve(process.cwd(), 'data/generated');
+
+// Per-IP rate limit for the redraw endpoint (calls a paid OpenAI image model).
+// 5 requests per 10-minute window per source IP.
+const redrawBucket = new Map<string, { count: number; resetAt: number }>();
+const REDRAW_LIMIT = 5;
+const REDRAW_WINDOW_MS = 10 * 60 * 1000;
+
+function resolveDiagramImagePath(diagram: GalleryDiagram): string | null {
+  if (!diagram.image) return null;
+  const relative = diagram.image.replace(/^\//, '');
+  const candidates = [path.resolve(clientDir, relative), path.resolve(__dirname, '../../client/public', relative)];
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  return null;
+}
+
 export function createApp(dbPath?: string) {
   const { db, migrate } = openDb(dbPath);
   migrate();
@@ -29,26 +52,40 @@ export function createApp(dbPath?: string) {
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(cors());
   app.use(express.json({ limit: '1mb' }));
+  app.use('/generated', express.static(genDir));
 
   app.get('/api/health', (_req, res) => res.json({ ok: true }));
   app.get('/api/questions', (_req, res) => res.json(questionConfig));
 
   app.get('/api/gallery/diagrams', (_req, res) => res.json(galleryDiagrams));
 
-  app.post('/api/gallery/suggest-title', (req, res) => {
+  app.post('/api/gallery/suggest-title', async (req, res) => {
     const parsed = z.object({ id: z.string() }).safeParse(req.body);
     if (!parsed.success) return res.status(400).json({ error: 'Invalid request payload', details: parsed.error.flatten() });
     const diagram = galleryDiagrams.find((d) => d.id === parsed.data.id);
     if (!diagram) return res.status(404).json({ error: 'Diagram not found' });
-    res.json(suggestTitle(diagram));
+    const aiResult = await suggestTitleWithAI(diagram, resolveDiagramImagePath(diagram));
+    res.json(aiResult ?? suggestTitle(diagram));
   });
 
-  app.post('/api/gallery/redraw', (req, res) => {
+  app.post('/api/gallery/redraw', async (req, res) => {
+    const ip = req.ip ?? 'unknown';
+    const now = Date.now();
+    const bucket = redrawBucket.get(ip);
+    if (bucket && now < bucket.resetAt) {
+      if (bucket.count >= REDRAW_LIMIT) {
+        return res.status(429).json({ status: 'error', message: `Redraw limit reached (${REDRAW_LIMIT} per 10 minutes). Please try again later.` });
+      }
+      bucket.count++;
+    } else {
+      redrawBucket.set(ip, { count: 1, resetAt: now + REDRAW_WINDOW_MS });
+    }
     const parsed = z.object({ id: z.string(), instructions: z.string().min(1).max(2000) }).safeParse(req.body);
     if (!parsed.success) return res.status(400).json({ error: 'Invalid request payload', details: parsed.error.flatten() });
     const diagram = galleryDiagrams.find((d) => d.id === parsed.data.id);
     if (!diagram) return res.status(404).json({ error: 'Diagram not found' });
-    res.json(redrawNotConfigured());
+    const result = await redrawWithAI(diagram, parsed.data.instructions, resolveDiagramImagePath(diagram), genDir, '/generated');
+    res.json(result);
   });
 
   app.post('/api/responses', (req, res) => {
@@ -91,8 +128,6 @@ export function createApp(dbPath?: string) {
     res.json({ surveyClosed: closed });
   });
 
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  const clientDir = path.resolve(__dirname, '../client');
   app.use(express.static(clientDir));
   app.get(/.*/, (_req, res, next) => {
     const index = path.join(clientDir, 'index.html');
